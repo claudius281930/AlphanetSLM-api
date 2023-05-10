@@ -1,10 +1,10 @@
-//modelo de destino (target model).
-
+//modelo de origem (source model) em relação ao modelo Link
 const { sequelize, DataTypes } = require("sequelize");
+const Link =require("../models/Link");
 
 module.exports = (sequelize, DataTypes) => {
-  const Link = sequelize.define(
-    "Link",
+  const Color = sequelize.define(
+    "Color",
     {
       id: {
         type: DataTypes.INTEGER,
@@ -16,28 +16,24 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: true,
       },
-      dateModify: {
-        type: DataTypes.DATEONLY,
-        allowNull: false,
-      },
-      refenrenceName: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      comeLink: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      colorTubet: {
+      colors: {
         type: DataTypes.STRING,
         allowNull: false,
       },
     },
     {
-      tableName: "link",
+      tableName: "color",
       underscored: true,
       timestamps: false,
     }
   );
-  return Link;
+
+  Color.associate = (models) => {
+    Color.hasOne(models.Link, {
+      as: "links",
+      foreignKey: "box_id", 
+      timestamps: false,
+    });
+  };
+  return Color;
 };

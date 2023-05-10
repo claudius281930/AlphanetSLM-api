@@ -1,50 +1,56 @@
+//modelo de origem (source model) em relação ao modelo Fusion
 const { sequelize, DataTypes } = require("sequelize");
+const Fusion =require("../models/Fusion");
 
 module.exports = (sequelize, DataTypes) => {
-  const caixa = sequelize.define(
-    "bprv",
+  const Box = sequelize.define(
+    "Box",
     {
       id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true,
-        allownull: false,
+        allowNull: false,
       },
-      dataCriacao: {
+      boxId:{
+        type: DataTypes.INTEGER,
+        allowNull: true,
+      },
+      dateModify: {
         type: DataTypes.DATEONLY,
         allowNull: false,
       },
-      nomeDescricao: {
+      nameDescription: {
         type: DataTypes.STRING,
         allowNull: false,
         unique: true,
       },
-      local: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      numFusoes: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-      },
-      detalheFusoes: {
+      locale: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      ativaCto: {
+      activeCto: {
         type: DataTypes.INTEGER,
         allowNull: true,
       },
-      tecnologiaRede: {
+      networkTechnology: {
         type: DataTypes.STRING,
         allowNull: false,
       },
     },
     {
-      tableName: "bprv",
+      tableName: "box",
       underscored: true,
       timestamps: false,
     }
   );
-  return caixa;
+  Box.associate = (models) => {
+    Box.hasMany(models.Fusion, {
+      as: "fusions",
+      foreignKey: "box_id",
+      timestamps: false
+    });
+  };
+  
+  return Box;
 };
