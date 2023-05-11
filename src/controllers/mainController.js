@@ -141,33 +141,29 @@ const mainController = {
     }
   },
   //UPDATE;
-  update: async (req, res) => {
+  fullUpdate: async (req, res) => {
     const id = req.params.id;
     const box = req.body;
-    const objBox = [id,box];
     try {
-      await Box.update(objBox, { where: { objBox } });
+      await Box.update(box, { where: { id } });
       res.status(200).json({ msg: "Caixa atualizada com sucesso!" });
     } catch (err) {
       console.error(err);
       res.status(404).json({ msg: "Caixa não encontrada" });
     }
   },
-  //PATCH;
-  partialUpdate: async (req, res) => {
+  //PATCH; sem funcionar e não precisa 
+  /*partialUpdate: async (req, res) => {
     const id = req.params.id;
     const box = req.body;
-    const objBox = [id,box]
     try {
-      await Box.update(objBox, {
-        where: { objBox },
-      });
+      await Box.patch(box, { where: { id } });
       res.status(200).json({ msg: "Caixa atualizada com sucesso!" });
     } catch (err) {
       console.error(err);
       res.status(404).json({ msg: "Caixa não encontrada" });
     }
-  },
+  },*/
   //DELETE;
   destroy: async (req, res) => {
     const id = req.params.id;

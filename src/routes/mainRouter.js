@@ -14,8 +14,8 @@ router.get('/locale/:locale', mainController.findByLocale);
 router.get("/detail/:name_description", mainController.findDetail);
 
 //U;
-router.put("/:id", mainController.update);
-router.patch("/:id", mainController.partialUpdate);
+router.put("/:id", mainController.fullUpdate);
+//router.patch("/:id", mainController.partialUpdate);
 
 //D;
 router.delete("/:id", mainController.destroy);
