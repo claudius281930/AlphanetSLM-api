@@ -45,6 +45,44 @@ const mainController = {
       res.status(500).json({ msg: "Erro ao buscar as caixas" });
     }
   },
+  findDetail: async (req, res) => {
+    const nameDescription = req.params.name_description;
+    try {
+      const box = await Box.findAll({
+        where: {
+          name_description: {
+            [db.Sequelize.Op.like]: `%${nameDescription}%`,
+          },
+        },
+        include: [
+          {
+            model: db.Fusion,
+            as: "fusions",
+            required: true,
+            include: [
+              {
+                model: db.Color,
+                as: "colouring",
+                required: true,
+                include: [
+                  {
+                    model: db.Link,
+                    as: "links",
+                    required: true,
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+        order: [["name_description", "asc"]],
+      });
+      res.status(200).json(box);
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ msg: "Erro ao buscar os detalhes da caixa" });
+    }
+  },
   findById: async (req, res) => {
     try {
       const box = await Box.findByPk(req.params.id);
@@ -59,7 +97,7 @@ const mainController = {
     }
   },
   findByName: async (req, res) => {
-    const nameDescription = req.params.nameDescription;
+    const nameDescription = req.params.name_description;
     try {
       const box = await Box.findOne({
         where: {
@@ -68,36 +106,41 @@ const mainController = {
         order: [["name_description", "asc"]],
       });
       if (!box) {
-        res.status(404).json({ msg: "Nenhum objeto encontrado com o nome fornecido." });
+        res
+          .status(404)
+          .json({ msg: "Nenhum objeto encontrado com o nome fornecido." });
       } else {
-      res.status(200).json(box);
+        res.status(200).json(box);
       }
     } catch (err) {
       console.error(err);
-      res.status(500).json({ msg: "Erro ao buscar as caixas" });
+      res.status(500).json({ msg: "Erro ao buscar a caixa" });
     }
   },
-  /*findByLocale: async (req, res) => {
-  try {
-    const name = req.params.name;
-    const box = await Box.findOne({
-      where: {
-        locale: {
-          [Op.eq]: locale,
+  findByLocale: async (req, res) => {
+    const nameLocale = req.params.locale;
+    try {
+      const box = await Box.findOne({
+        where: {
+          locale: {
+            [db.Sequelize.Op.like]: `%${nameLocale}%`,
+          },
         },
-      },
-    });
-    
-    if (box) {
-      res.status(200).json(box);
-    } else {
-      res.status(404).json({ msg: 'Nenhum objeto encontrado com o nome fornecido.' });
+        order: [["locale", "asc"]],
+      });
+
+      if (!box) {
+        res
+          .status(404)
+          .json({ msg: "Nenhum objeto encontrado com o local fornecido." });
+      } else {
+        res.status(200).json(box);
+      }
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ msg: "Erro ao buscar o objeto pelo local." });
     }
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ msg: 'Erro ao buscar o objeto pelo nome.' });
-  }
-},*/
+  },
   //UPDATE;
   update: async (req, res) => {
     const id = req.params.id;
