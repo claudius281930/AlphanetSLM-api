@@ -5,9 +5,10 @@ const Box = db.Box;
 const mainController = {
   //CREATE;
   create: async (req, res) => {
+    const newBox = req.body;
     try {
-      const box = await Box.create(req.body);
-      res.status(201).json({ msg: "Caixa criada com sucesso!!", box });
+      const box = await Box.create(newBox);
+      res.status(201).json({ msg: "Caixa criada com sucesso!", box });
     } catch (err) {
       console.error(err);
       res.status(400).json({ msg: "Erro ao criar a caixa" });
@@ -45,6 +46,7 @@ const mainController = {
       res.status(500).json({ msg: "Erro ao buscar as caixas" });
     }
   },
+  //tras todo os detalhes das realções entre os modelos
   findDetail: async (req, res) => {
     const nameDescription = req.params.name_description;
     try {
@@ -77,15 +79,16 @@ const mainController = {
         ],
         order: [["name_description", "asc"]],
       });
-      res.status(200).json(box);
+      res.status(200).json({msg:nameDescription,box});
     } catch (err) {
       console.error(err);
       res.status(500).json({ msg: "Erro ao buscar os detalhes da caixa" });
     }
   },
   findById: async (req, res) => {
+    const id = req.params.id;
     try {
-      const box = await Box.findByPk(req.params.id);
+      const box = await Box.findByPk(id);
       if (!box) {
         res.status(404).json({ msg: "Caixa não encontrada" }); // 404 = Not Found
       } else {
@@ -106,11 +109,9 @@ const mainController = {
         order: [["name_description", "asc"]],
       });
       if (!box) {
-        res
-          .status(404)
-          .json({ msg: "Nenhum objeto encontrado com o nome fornecido." });
+        res.status(404).json({ msg: "Nenhum objeto encontrado com o nome fornecido." });
       } else {
-        res.status(200).json(box);
+        res.status(200).json({msg:nameDescription,box});
       }
     } catch (err) {
       console.error(err);
@@ -130,11 +131,9 @@ const mainController = {
       });
 
       if (!box) {
-        res
-          .status(404)
-          .json({ msg: "Nenhum objeto encontrado com o local fornecido." });
+        res.status(404).json({ msg: "Nenhum objeto encontrado com o local fornecido." });
       } else {
-        res.status(200).json(box);
+        res.status(200).json({msg:nameLocale,box});
       }
     } catch (err) {
       console.error(err);
@@ -145,8 +144,9 @@ const mainController = {
   update: async (req, res) => {
     const id = req.params.id;
     const box = req.body;
+    const objBox = [id,box];
     try {
-      await Box.update(box, { where: { id } });
+      await Box.update(objBox, { where: { objBox } });
       res.status(200).json({ msg: "Caixa atualizada com sucesso!" });
     } catch (err) {
       console.error(err);
@@ -157,9 +157,10 @@ const mainController = {
   partialUpdate: async (req, res) => {
     const id = req.params.id;
     const box = req.body;
+    const objBox = [id,box]
     try {
-      await Box.update(box, {
-        where: { id },
+      await Box.update(objBox, {
+        where: { objBox },
       });
       res.status(200).json({ msg: "Caixa atualizada com sucesso!" });
     } catch (err) {
@@ -169,13 +170,13 @@ const mainController = {
   },
   //DELETE;
   destroy: async (req, res) => {
+    const id = req.params.id;
     try {
-      const { id } = req.params.id;
-      const excluirBox = await Box.destroy({
+      const deleteBox = await Box.destroy({
         where: { id },
       });
-      if (!excluirBox) {
-        res.status(404).json({ msg: "Não foi possivel excluir a caixa" });
+      if (!deleteBox) {
+        res.status(404).json({ msg: "Não foi possivel excluir a caixa ou a ela não existe" });
       } else {
         res.status(200).json({ msg: "Caixa excluido com sucesso!" });
       }
