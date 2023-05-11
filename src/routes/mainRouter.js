@@ -9,8 +9,8 @@ router.post("/create", mainController.create);
 //R;
 router.get("/", mainController.findAll);
 router.get("/:id", mainController.findById);
-router.get("/:nameDescription",mainController.findByName); 
-router.get('/:locale', mainController.findByLocale);
+router.get("/name/:name",mainController.findByName); 
+//router.get('/locale/:locale', mainController.findByLocale);
 
 //U;
 router.put("/:id", mainController.update);
