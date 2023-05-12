@@ -7,7 +7,11 @@ const app = express();
 app.use(express.json());
 
 // rotas da sua API
-app.use("/box", mainRouter);
+app.use("/", mainRouter);
+app.use("/box",mainRouter);
+app.use("/fusion",mainRouter);
+app.use("/color",mainRouter);
+app.use("/link",mainRouter);
 
 // error handler
 app.use(function (err, req, res, next) {

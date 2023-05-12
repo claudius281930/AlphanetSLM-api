@@ -12,10 +12,10 @@ module.exports = (sequelize, DataTypes) => {
         autoIncrement: true,
         allowNull: false,
       },
-      boxId:{
+      /*boxId:{
         type: DataTypes.INTEGER,
         allowNull: true,
-      },
+      },*/
       dateModify: {
         type: DataTypes.DATEONLY,
         allowNull: false,
