@@ -12,10 +12,6 @@ module.exports = (sequelize, DataTypes) => {
         autoIncrement: true,
         allowNull: false,
       },
-      /*boxId:{
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },*/
       dateModify: {
         type: DataTypes.DATEONLY,
         allowNull: false,
@@ -47,10 +43,9 @@ module.exports = (sequelize, DataTypes) => {
   Box.associate = (models) => {
     Box.hasMany(models.Fusion, {
       as: "fusions",
-      foreignKey: "box_id",
+      foreignKey: "box_id",//Nome da relação entre as tabelas envolvidas.
       timestamps: false
     });
   };
-  
   return Box;
 };

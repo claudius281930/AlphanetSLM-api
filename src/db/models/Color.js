@@ -27,7 +27,6 @@ module.exports = (sequelize, DataTypes) => {
       timestamps: false,
     }
   );
-
   Color.associate = (models) => {
     Color.hasOne(models.Link, {
       as: "links",

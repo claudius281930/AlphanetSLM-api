@@ -32,7 +32,6 @@ module.exports = (sequelize, DataTypes) => {
       timestamps: false,
     }
   );
-
   Fusion.associate = (models) => {
     Fusion.hasOne(models.Color, {
       as: "colouring",

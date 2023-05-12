@@ -12,7 +12,7 @@ const mainController = {
     const body = req.body;
     try {
       const object = await Box.create(body);
-      res.status(201).json({ msg: "Caixa criada com sucesso!", object });
+      res.status(201).json({ msg: "Caixa criada com sucesso!"});
     } catch (err) {
       console.error(err);
       res.status(400).json({ msg: "Erro ao criar a caixa" });
@@ -23,7 +23,7 @@ const mainController = {
     const body = req.body;
     try {
       const object = await Fusion.create(body);
-      res.status(201).json({ msg: "Fusão criada com sucesso!", object });
+      res.status(201).json({ msg: "Fusão criada com sucesso!"});
     } catch (err) {
       console.error(err);
       res.status(400).json({ msg: "Erro ao criar a fusão" });
@@ -34,7 +34,7 @@ const mainController = {
     const body = req.body;
     try {
       const object = await Color.create(body);
-      res.status(201).json({ msg: "Cores criada com sucesso!", object });
+      res.status(201).json({ msg: "Cores criada com sucesso!"});
     } catch (err) {
       console.error(err);
       res.status(400).json({ msg: "Erro ao criar as cores" });
@@ -45,7 +45,7 @@ const mainController = {
     const body = req.body;
     try {
       const object = await Link.create(body);
-      res.status(201).json({ msg: "Link criada com sucesso!", object });
+      res.status(201).json({ msg: "Link criada com sucesso!"});
     } catch (err) {
       console.error(err);
       res.status(400).json({ msg: "Erro ao criar link" });
