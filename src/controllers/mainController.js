@@ -12,7 +12,7 @@ const mainController = {
     const body = req.body;
     try {
       const object = await Box.create(body);
-      res.status(201).json({ msg: "Caixa criada com sucesso!"});
+      res.status(201).json({ msg: "Caixa criada com sucesso!" });
     } catch (err) {
       console.error(err);
       res.status(400).json({ msg: "Erro ao criar a caixa" });
@@ -23,7 +23,7 @@ const mainController = {
     const body = req.body;
     try {
       const object = await Fusion.create(body);
-      res.status(201).json({ msg: "Fusão criada com sucesso!"});
+      res.status(201).json({ msg: "Fusão criada com sucesso!" });
     } catch (err) {
       console.error(err);
       res.status(400).json({ msg: "Erro ao criar a fusão" });
@@ -34,7 +34,7 @@ const mainController = {
     const body = req.body;
     try {
       const object = await Color.create(body);
-      res.status(201).json({ msg: "Cores criada com sucesso!"});
+      res.status(201).json({ msg: "Cores criada com sucesso!" });
     } catch (err) {
       console.error(err);
       res.status(400).json({ msg: "Erro ao criar as cores" });
@@ -45,7 +45,7 @@ const mainController = {
     const body = req.body;
     try {
       const object = await Link.create(body);
-      res.status(201).json({ msg: "Link criada com sucesso!"});
+      res.status(201).json({ msg: "Link criada com sucesso!" });
     } catch (err) {
       console.error(err);
       res.status(400).json({ msg: "Erro ao criar link" });
@@ -56,7 +56,7 @@ const mainController = {
   //TB-Box;
   findBox: async (req, res) => {
     try {
-      const boxes = await Box.findAll();
+      const boxes = await Box.findAll({ limit: 5 });
       res.status(200).json(boxes);
     } catch (err) {
       console.error(err);
@@ -66,7 +66,7 @@ const mainController = {
   //TB-Fusion;
   findFusion: async (req, res) => {
     try {
-      const fusions = await Fusion.findAll();
+      const fusions = await Fusion.findAll({ limit: 5 });
       res.status(200).json(fusions);
     } catch (err) {
       console.error(err);
@@ -76,7 +76,7 @@ const mainController = {
   //TB-Color;
   findColor: async (req, res) => {
     try {
-      const colors = await Color.findAll();
+      const colors = await Color.findAll({ limit: 5 });
       res.status(200).json(colors);
     } catch (err) {
       console.error(err);
@@ -86,7 +86,7 @@ const mainController = {
   //TB-Link;
   findLink: async (req, res) => {
     try {
-      const links = await Link.findAll();
+      const links = await Link.findAll({ limit: 5 });
       res.status(200).json(links);
     } catch (err) {
       console.error(err);
