@@ -1,4 +1,4 @@
-const db = require("../src/db/models");
+//const db = require("../src/db/models");
 const express = require("express");
 
 const mainRouter = require("./routes/mainRouter");
