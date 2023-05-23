@@ -262,7 +262,7 @@ const mainController = {
           msg: "Não foi possivel excluir a caixa ou a ela não existe",
         });
       } else {
-        res.status(200).json({ msg: "Caixa excluido com sucesso!" });
+        res.status(200).json({ msg: "Caixa excluida com sucesso!" });
       }
     } catch (err) {
       console.error();
