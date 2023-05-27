@@ -26,7 +26,6 @@ router.get("/detail/:name_description", mainController.findDetail);
 /* --------------------------------------------------------------------- */
 //U;
 router.put("/:id", mainController.fullUpdate);
-//router.patch("/:id", mainController.partialUpdate); //Não há necessidade de implentação;
 /* --------------------------------------------------------------------- */
 //D;
 router.delete("/:id", mainController.destroy);
