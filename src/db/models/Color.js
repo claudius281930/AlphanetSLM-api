@@ -33,6 +33,16 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: "box_id", 
       timestamps: false,
     });
+    /*
+  Color.associate = (models) => {
+  Color.belongsToMany(models.Fusion, {
+    through: "FusionColor",
+    foreignKey: "colorId",
+    otherKey: "fusionId",
+    as: "fusions",
+  });
+};
+ */
   };
   return Color;
 };
