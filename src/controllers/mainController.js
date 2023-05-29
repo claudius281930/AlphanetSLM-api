@@ -56,7 +56,7 @@ const mainController = {
   //TB-Box;
   findBox: async (req, res) => {
     try {
-      const boxes = await Box.findAll({ limit: 5 });
+      const boxes = await Box.findAll({ limit: 3 });
       res.status(200).json(boxes);
     } catch (err) {
       console.error(err);
@@ -66,7 +66,7 @@ const mainController = {
   //TB-Fusion;
   findFusion: async (req, res) => {
     try {
-      const fusions = await Fusion.findAll({ limit: 5 });
+      const fusions = await Fusion.findAll({ limit: 3 });
       res.status(200).json(fusions);
     } catch (err) {
       console.error(err);
@@ -76,7 +76,7 @@ const mainController = {
   //TB-Color;
   findColor: async (req, res) => {
     try {
-      const colors = await Color.findAll({ limit: 5 });
+      const colors = await Color.findAll({ limit: 3 });
       res.status(200).json(colors);
     } catch (err) {
       console.error(err);
@@ -86,7 +86,7 @@ const mainController = {
   //TB-Link;
   findLink: async (req, res) => {
     try {
-      const links = await Link.findAll({ limit: 5 });
+      const links = await Link.findAll({ limit: 3 });
       res.status(200).json(links);
     } catch (err) {
       console.error(err);
