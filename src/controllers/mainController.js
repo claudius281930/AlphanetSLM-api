@@ -146,6 +146,33 @@ const mainController = {
       res.status(500).json({ msg: "Erro ao buscar a caixa" });
     }
   },
+  //ainda fazendo
+  findBoxBySearch: async (req, res) => {
+    let searchTerm = req.params.searchTerm;
+
+    let box;
+    try {
+      // É um ID, fazer busca por ID
+      if (isNaN === searchTerm) {
+        //se for um numero jogue para esta rota
+        box = await Box.findByPk(searchTerm);
+      } else {
+        // É um name_description, fazer busca por name_description
+        box = await Box.findOne({
+          where: {
+            name_description: {
+              [db.Sequelize.Op.like]: `%${searchTerm}%`,
+            },
+          },
+          order: [["name_description", "asc"]],
+        });
+      }
+      res.status(200).json(box);
+    } catch (error) {
+      console.error(error, "Algo deu errado!");
+      return res.status(500).send("Erro interno do servidor.");
+    }
+  },
   //TB-Fusion;
   findByIdFusion: async (req, res) => {
     const id = req.params.id;

@@ -20,7 +20,7 @@ router.get("/:id", mainController.findByIdBox);
 router.get("/fusion/:id", mainController.findByIdFusion);
 router.get("/color/:id", mainController.findByIdColor);
 router.get("/link/:id", mainController.findByIdLink);
-router.get("/name/:name_description", mainController.findByName);
+router.get("/name/:name_description", mainController.findByName);// /name/:name_description
 router.get("/locale/:locale", mainController.findByLocale);
 router.get("/detail/:name_description", mainController.findDetail);
 /* --------------------------------------------------------------------- */
