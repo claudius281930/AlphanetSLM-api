@@ -1,6 +1,6 @@
 //modelo de origem (source model) em relação ao modelo Fusion
 const { sequelize, DataTypes } = require("sequelize");
-const Fusion =require("../models/Fusion");
+const Fusion = require("../models/Fusion");
 
 module.exports = (sequelize, DataTypes) => {
   const Box = sequelize.define(
@@ -33,6 +33,14 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
+      // img: {
+      //   type: DataTypes.BLOB("medium"),
+      //   allowNull: true,
+      // },
+      // observation: {
+      //   type: DataTypes.STRING,
+      //   allowNull: true,
+      // },
     },
     {
       tableName: "box",
@@ -43,8 +51,8 @@ module.exports = (sequelize, DataTypes) => {
   Box.associate = (models) => {
     Box.hasMany(models.Fusion, {
       as: "fusions",
-      foreignKey: "box_id",//Nome da relação entre as tabelas envolvidas.
-      timestamps: false
+      foreignKey: "box_id", //Nome da relação entre as tabelas envolvidas.
+      timestamps: false,
     });
   };
   return Box;
