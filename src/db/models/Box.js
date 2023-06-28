@@ -45,13 +45,13 @@ module.exports = (sequelize, DataTypes) => {
     {
       tableName: "box",
       underscored: true,
-      timestamps: false,
+      timestamps: false, //true
     }
   );
   Box.associate = (models) => {
     Box.hasMany(models.Fusion, {
-      as: "fusions",
-      foreignKey: "box_id", //Nome da relação entre as tabelas envolvidas.
+      as: "fusions", //Nome da relação entre as tabelas envolvidas.
+      foreignKey: "box_id", 
       timestamps: false,
     });
   };

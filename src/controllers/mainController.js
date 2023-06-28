@@ -56,7 +56,11 @@ const mainController = {
   //TB-Box;
   findBox: async (req, res) => {
     try {
-      const boxes = await Box.findAll({ limit: 2 });
+      const boxes = await Box.findAll({ limit: 6, 
+        order:[ 
+          ["id", "DESC"] // atualizado para exibir em ordem decrescente por ID
+        ]
+      }); 
       res.status(200).json(boxes);
     } catch (err) {
       console.error(err);
