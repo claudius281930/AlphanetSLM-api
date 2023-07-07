@@ -9,17 +9,11 @@ module.exports = {
      * Example:
      * await queryInterface.createTable('users', { id: Sequelize.INTEGER });
      */
-    await queryInterface.createTable(
-      "box", 
-      {
+    await queryInterface.createTable("box", {
       id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
         autoIncrement: true,
-        allowNull: false,
-      },
-      dateModify: {
-        type: Sequelize.DATEONLY,
         allowNull: false,
       },
       nameDescription: {
@@ -40,7 +34,7 @@ module.exports = {
         allowNull: false,
       },
       // img: {
-      //   type: Sequelize.BLOB("medium"),
+      //   type: Sequelize.BLOB("long"),
       //   allowNull: true,
       // },
       // observation: {
@@ -57,6 +51,6 @@ module.exports = {
      * Example:
      * await queryInterface.dropTable('users');
      */
-    await queryInterface.dropTable('box');
+    await queryInterface.dropTable("box");
   },
 };

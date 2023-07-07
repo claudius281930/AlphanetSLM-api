@@ -1,0 +1,92 @@
+<!-- Metadados da página -->
+<%- include("../partials/head") %>
+
+    <body>
+        <!-- <div class="p-3 text-primary-emphasis bg-primary-subtle border border-primary-subtle rounded-3">
+            Example element with utilities
+          </div> -->
+        <%- include("../partials/header") %>
+
+            <main class="container-fluid container-main">
+                <section class="container-fluid container-sm mt-6">
+
+                    <p class="text-light h1 text-center mt-6 mb-5">Buscar</p>
+
+                    <div class="content-form">
+                        <form method="POST" action="box/name" id="name_description">
+
+                            <div class="input-group mb-2 placeholder-wave">
+
+                                <label for="name-description" class="input-group-text inputGroup-sizing-default"
+                                    autofocus>Pesquisar
+                                </label>
+
+                                <!-- Atributo no input (name="name_description") precisa ser igual a rota. 
+                                        Assim como o valor do pego no controlador e tbm na rquicição axios. -->
+                                <input type="text" name="name_description" id="name-description"
+                                    class="form-control form-control-sm p-2 text-primary-emphasis bg-dark-subtle border border-primary
+                                    opacity-75"
+                                    placeholder="Nome" aria-label="Sizing text input"
+                                    aria-describedby="inputGroup-sizing-sm">
+                                <button type="submit" class="btn btn-outline-light text-uppercase">Buscar</button>
+                            </div>
+                        </form>
+
+                        <form method="POST" action="/box/id" id="id">
+                            <div class="input-group mb-2 placeholder-wave">
+
+                                <label for="id" class="input-group-text inputGroup-sizing-default"
+                                    autofocus>Pesquisar</label>
+                                <!-- Atributo no input (name="name-description") precisa ser igual a rota. 
+                        Assim como o valor do pego no controlador e tbm na rquicição axios. -->
+                                <input type="number" name="id" id="id"
+                                    class="form-control form-control-sm p-2 text-primary-emphasis bg-dark-subtle border border-primary
+                                    opacity-75"
+                                    placeholder="Número" aria-label="Sizing number input"
+                                    aria-describedby="inputGroup-sizing-sm">
+                                <button type="submit" class="btn btn-outline-light text-uppercase">Buscar</button>
+                            </div>
+                        </form>
+
+                        <form method="POST" action="/locale" id="id">
+                            <div class="input-group mb-2 placeholder-wave">
+
+                                <label for="locale" class="input-group-text inputGroup-sizing-default"
+                                    autofocus>Pesquisar</label>
+                                <input type="text" name="locale" id="locale"
+                                    class="form-control form-control-sm p-2 text-primary-emphasis bg-dark-subtle border border-primary
+                                    opacity-75"
+                                    placeholder="Local" aria-label="Sizing example input"
+                                    aria-describedby="inputGroup-sizing-sm">
+                                <button type="submit" class="btn btn-outline-light text-uppercase">Buscar</button>
+                            </div>
+                        </form>
+
+                    </div>
+
+                    <nav class="container container-navegation-search mt-6 fs-5">
+                        <ul class="fw-bold navegation-search-list">
+
+                            <div class="container row g-0 content-navegation">
+                                <li class="col-6 text-center item-search">
+                                    <a class="text-uppercase link-offset-2 link-underline 
+                                    link-underline-opacity-0 border-bottom border-info"
+                                    href="http://localhost:3001/login">Login</a>
+                                </li>
+                                <li class="col-6 text-center item-search">
+                                    <a class="text-uppercase link-offset-2 link-underline 
+                                    link-underline-opacity-0 border-bottom border-info" 
+                                    href="http://localhost:3001/register">Cadastre-se</a>
+                                </li>
+
+                            </div>
+                        </ul>
+                    </nav>
+                </section>
+            </main>
+
+            <!-- Footer da pagina -->
+            <%- include("../partials/footer") %>
+    </body>
+
+    </html>

@@ -16,6 +16,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: true,
       },
+      // Este campo será excluido na proxima criação do DB
       dateModify: {
         type: DataTypes.DATEONLY,
         allowNull: false,
@@ -36,7 +37,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       tableName: "link",
       underscored: true,
-      timestamps: false,
+      timestamps: false,// true
     }
   );
   return Link;

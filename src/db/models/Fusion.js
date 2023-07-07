@@ -17,6 +17,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: true,
       },
+      // Este campo será excluido na proxima criação do DB
       dateModify: {
         type: DataTypes.DATEONLY,
         allowNull: false,
@@ -36,7 +37,7 @@ module.exports = (sequelize, DataTypes) => {
     Fusion.hasOne(models.Color, {
       as: "colouring",
       foreignKey: "box_id",
-      timestamps: false
+      timestamps: false // true
     });
     /*
   Fusion.associate = (models) => {

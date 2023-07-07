@@ -1,0 +1,40 @@
+<!-- Metadados da pagina -->
+<%- include("../partials/head" )%>
+
+    <body>
+        <%- include("../partials/header") %>
+        
+            <main class="container">
+                <section class="container mt-6">
+
+                    <p class="text-light text-center h1 mb-5">Excluir Caixa</p>
+
+                    <div class="content-form-delete">
+
+                        <p class="text-light text-start h6 mb-3">Tem certeza de que deseja excluir o objeto?</p>
+
+                        <form action="box/:<%= id %>?_method=DELETE" method="POST" name="id">
+                            <div class="input-group input-group mb-3 placeholder-wave">
+
+                                <label for="number" class="input-group-text inputGroup-sizing-default">ID:</label>
+                                <input type="number" name="id" id="number" required autofocus
+                                    placeholder="Número da caixa"
+                                    class="form-control form-control-sm p-2 text-primary-emphasis bg-dark-subtle border border-primary
+                                    opacity-75"
+                                    aria-label="Sizing text input" aria-describedby="inputGroup-sizing-sm">
+                            </div>
+                            <div class="input-group input-group mb-3 container-btn">
+                                <button type="submit" class="btn btn-outline-light text-uppercase
+                                btn-content">Excluir</button>
+                            </div>
+                        </form>
+                    </div>
+                    
+                </section>
+
+            </main>
+            <!-- Footer da pagina -->
+            <%- include("../partials/footer") %>
+    </body>
+
+    </html>

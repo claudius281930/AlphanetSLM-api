@@ -1,13 +1,23 @@
 //const db = require("../src/db/models");
 const express = require("express");
+const app = express();
+const methodOverride = require("method-override");
+const path = require("path");
 
 const mainRouter = require("./routes/mainRouter");
+// const mainUserRouter = require("../src/routes/mainUserRouter");
 
-const app = express();
+app.use(express.static(path.join(__dirname, "../public"))); // precisa definir o caminho certinho para funcionar ../
+app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
+app.use(methodOverride("_method"));
+
+app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "/views"));
 
 // rotas da sua API
 app.use("/", mainRouter);
+// app.use("/", mainUserRouter);
 app.use("/box", mainRouter);
 app.use("/fusion", mainRouter);
 app.use("/color", mainRouter);

@@ -1,24 +1,179 @@
 const { Op } = require("sequelize");
 const db = require("../db/models");
+//const boxRequest = require("../requests/boxRequest");
 const Box = db.Box;
 const Fusion = db.Fusion;
 const Color = db.Color;
 const Link = db.Link;
 
 const mainController = {
-  //CREATE;
-  //TB-Box;
-  createBox: async (req, res) => {
-    const body = req.body;
-    try {
-      const object = await Box.create(body);
-      res.status(201).json({ msg: "Caixa criada com sucesso!" });
-    } catch (err) {
-      console.error(err);
-      res.status(400).json({ msg: "Erro ao criar a caixa" });
-    }
-  },
-  //TB-Fusion;
+  // pageSearch: async (req, res) => {
+  //   res.render("find/search"); // A partir do diretorio VIEWS;
+  // },
+  // getBoxByNameFromBody: async (req, res) => {
+  //   const name = req.body.name_description;
+  //   try {
+  //     const response = await boxRequest.getBoxName(name);
+  //     let box = response.data;
+
+  //     if (box) {
+  //       return res.render("find/boxName", { nameBox: box }); // A Key(nameBox) pode ser qualquer nome
+  //     } else {
+  //       return res.send("Objeto não encontrado ou não existe");
+  //     }
+  //   } catch (error) {
+  //     console.error(error, "Algo deu errado!");
+  //   }
+  // },
+  // getDetailBox: async (req, res) => {
+  //   const nameForDetail = req.query.name_description; // captura o valor passado no input e adiciona a rota url
+  //   try {
+  //     const response = await boxRequest.detailBox(nameForDetail);
+  //     let box = response.data.box; // Obtenha a propriedade "box" do objeto de resposta
+  //     if (box) {
+  //       res.render("/detail/detail", { detailBox: box });
+  //     } else {
+  //       return res.send("Detalhes do objeto não encontrado ou não existe");
+  //     }
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // },
+  // getBoxByLocaleFromBody: async (req, res) => {
+  //   const locale = req.body.locale;
+  //   console.log(locale);
+  //   try {
+  //     const response = await boxRequest.getBoxLocale(locale);
+  //     let box = response.data;
+  //     console.log(box);
+
+  //     if (box) {
+  //       return res.render("/find/boxName", { nameBox: box }); // A Key(nameBox) pode ser qualquer nome
+  //     } else {
+  //       return res.send("Objeto não encontrado ou não existe");
+  //     }
+  //   } catch (error) {
+  //     console.error(error, "Algo deu errado!");
+  //   }
+  // },
+  // pageFormCreateBox: (req, res) => {
+  //   const currentDate = new Date().toISOString().split("T")[0];
+  //   res.render("create/create_box_form", { currentDate });
+  // },
+  // createBox: async (req, res) => {
+  //   const body = req.body;
+  //   try {
+  //     const object = await Box.create(body);
+  //     res.status(201).json({ msg: "Caixa criada com sucesso!" });
+  //   } catch (err) {
+  //     console.error(err);
+  //     res.status(400).json({ msg: "Erro ao criar a caixa" });
+  //   }
+  // },
+  // getBoxes: (req, res) => {
+  //   // then((response) => {
+  //   //   const apiBoxes = response.data.boxes;
+  //   boxRequest.getBox()
+  //     .then((result) => {
+  //       const apiBoxes = result.data;
+  //       res.render("find/boxes", { boxesAll : apiBoxes, totalityPage : result.data.totalPages });
+  //     })
+  //     .catch((error) => {
+  //       if (error.response) {
+  //         // Erro de resposta da API
+  //         console.log(error.response.status);
+  //         console.log(error.response.data);
+  //         console.log(error.response.headers);
+  //       } else if (error.request) {
+  //         // Erro de requisição (sem resposta)
+  //         console.log(error.request);
+  //       } else {
+  //         // Outro tipo de erro
+  //         console.log("Erro", error.message);
+  //       }
+  //       res.render("error", { nameBox: [] });
+  //     });
+  // },
+  // getBoxById: async (req, res) => {
+  //   const id = req.body.id;
+  //   console.log({ valor: id });
+  //   try {
+  //     const response = await boxRequest.getBoxId(id);
+  //     const box = response.data;
+  //     console.log(box);
+  //     if (!box) {
+  //       return res.render("error", { msg: "caixa não encontrada" });
+  //     } else {
+  //       return res.render("find/boxId", { idBox: box });
+  //     }
+  //   } catch (error) {
+  //     if (error.response) {
+  //       // Erro de resposta da API
+  //       console.log(error.response.status);
+  //       console.log(error.response.data);
+  //       console.log(error.response.headers);
+  //     } else if (error.request) {
+  //       // Erro de requisição (sem resposta)
+  //       console.log(error.request);
+  //     } else {
+  //       // Outro tipo de erro
+  //       console.log("Erro", error.message);
+  //     }
+  //     res.render("error", { nameBox: [] });
+  //   }
+  // },
+  // pageFormUpdateBox: async (req, res) => {
+  //   const currentDate = new Date().toISOString().split("T")[0];
+  //   const id = req.body.id;
+  //   res.render("update/updateBox", { currentDate, id: id });
+  // },
+  // updateBox: async (req, res) => {
+  //   // Obtém o ID do objeto a ser atualizar
+  //   let id = req.body.id;
+  //   try {
+  //     //verificando se o objeto existe na base;
+  //     if (boxRequest.getBoxId(id)) {
+  //       console.log("Objeto encontrado");
+  //     } else {
+  //       console.log("Objeto não encontrado");
+  //     }
+  //     //console.log(id);
+  //     //Pegar os valores passados via body
+  //     let body = {
+  //       dateModify: req.body.dateModify,
+  //       nameDescription: req.body.nameDescription,
+  //       locale: req.body.locale,
+  //       activeCto: req.body.activeCto,
+  //       networkTechnology: req.body.networkTechnology,
+  //     };
+  //     //Armazenar
+  //     let box = body;
+  //     // Chama a função de requisição de atualização
+  //     await boxRequest.updateBox(box, id);
+  //     res.redirect(200, "find/search"); //.json({ msg: "Objeto atualizado!" });
+  //   } catch (error) {
+  //     // Houve um erro na requisição de atualização
+  //     console.log("Erro:", error.message);
+  //     res.status(500).json({ message: "Erro interno do servidor." });
+  //   }
+  // },
+  // pageFormDeleteBox: (req, res) => {
+  //   const id = req.body.id;
+  //   res.render("delete/deleteBox", { id: id });
+  // },
+  // deleteBox: async (req, res) => {
+  //   // Obtém o ID do objeto a ser deletado
+  //   const id = req.body.id;
+  //   try {
+  //     await boxRequest.deleteBox(id); //Mesmo parametro da requisisão esperado pelo AXIOS
+  //     res.redirect(200, "find/search");
+  //   } catch (error) {
+  //     // Houve um erro na requisição de deleção
+  //     console.error("Erro:", error);
+  //     res.status(500).json({ message: "Erro interno do servidor." });
+  //   }
+  // },
+  /* *********************** */
   createFusion: async (req, res) => {
     const body = req.body;
     try {
@@ -29,7 +184,6 @@ const mainController = {
       res.status(400).json({ msg: "Erro ao criar a fusão" });
     }
   },
-  //TB-Color;
   createColor: async (req, res) => {
     const body = req.body;
     try {
@@ -40,7 +194,6 @@ const mainController = {
       res.status(400).json({ msg: "Erro ao criar as cores" });
     }
   },
-  //TB-Link;
   createLink: async (req, res) => {
     const body = req.body;
     try {
@@ -51,26 +204,41 @@ const mainController = {
       res.status(400).json({ msg: "Erro ao criar link" });
     }
   },
-
-  //READ;
-  //TB-Box;
   findBox: async (req, res) => {
     try {
-      const boxes = await Box.findAll({ limit: 6, 
-        order:[ 
-          ["id", "DESC"] // atualizado para exibir em ordem decrescente por ID
-        ]
-      }); 
-      res.status(200).json(boxes);
-    } catch (err) {
-      console.error(err);
-      res.status(500).json({ msg: "Erro ao buscar as caixas" });
+      // Definir uma pagina padrão;
+      let { page = 1 } = req.query;
+      //Garantir que a page sempre seja um numero inteiro;
+      page = parseInt(page);
+      // Definir uma página padrão válida
+      if (isNaN(page) || page <= 0) {
+        page = 1;
+      }
+      //Limitando a quantidade de intens a serem retornados;
+      const limit = 6;
+      //Calcula a paginação com os seus itens de exibição
+      let offset = page * limit - limit;
+      //Pegando a quantidade de dados e os dados em si;
+      let { count: total, rows: boxes } = await Box.findAndCountAll({
+        limit: limit,
+        //Calcualando a quantidade de intens por paginas;
+        offset: offset, //(1 * 6) - 6 = 0(pagina);
+        order: [["id", "DESC"]],
+      });
+      //Retorna o status code para uma requisição bem-sucedida.
+      return res.status(200).json({ boxes, total });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({
+        msg: "Erro ao buscar as caixas",
+        error: error,
+      });
     }
   },
   //TB-Fusion;
   findFusion: async (req, res) => {
     try {
-      const fusions = await Fusion.findAll(/*{ limit: 10 }*/);
+      const fusions = await Fusion.findAll();
       res.status(200).json(fusions);
     } catch (err) {
       console.error(err);

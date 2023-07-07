@@ -1,0 +1,53 @@
+<%- include("../partials/head" )%>
+
+    <body>
+        <%- include("../partials/header") %>
+
+            <main class="container-fluid">
+                <section class="container-fluid container-sm mt-6">
+
+                    <p class="text-light text-center h1 mb-5">Cadastrar</p>
+                    <div class="content-register">
+
+                        <form action="/register" method="POST" class="placeholder-wave">
+                                <div class="input-group input-group mb-3">
+
+                                    <label for="name" class="input-group-text inputGroup-sizing-default" autofocus>
+                                        Nome:</label>
+                                    <input type="text" id="name" name="name" value="<%#= currentDate %>" required
+                                        autofocus class="form-control form-control-sm p-2 text-primary-emphasis bg-dark-subtle border border-primary
+                                    opacity-75" aria-label="Sizing text input" aria-describedby="inputGroup-sizing-sm">
+                                </div>
+                                <div class="input-group input-group mb-3">
+                                    <label for="Email" class="input-group-text inputGroup-sizing-default" autofocus>
+                                        Email:</label>
+                                    <input type="text" id="Email" name="Email" value="<%#= currentDate %>" required
+                                        autofocus class="form-control form-control-sm p-2 text-primary-emphasis bg-dark-subtle border border-primary
+                                    opacity-75" aria-label="Sizing text input" aria-describedby="inputGroup-sizing-sm">
+                                </div>
+                                <div class="input-group input-group mb-3">
+                                    <label for="password" class="input-group-text inputGroup-sizing-default" autofocus>
+                                        Senha</label>
+                                    <input type="password" id="password" name="password" value="<%#= currentDate %>"
+                                        required autofocus class="form-control form-control-sm p-2 text-primary-emphasis bg-dark-subtle border border-primary
+                                    opacity-75" aria-label="Sizing text input" aria-describedby="inputGroup-sizing-sm">
+                                </div>
+                            
+
+                            <div class="input-group input-group mb-3 container-btn">
+                                <button type="submit" class="btn btn btn-outline-light text-uppercase
+                                    btn-content">Enviar
+                                </button>
+                            </div>
+
+                        </form>
+                    </div>
+
+                </section>
+
+            </main>
+            <!-- Footer da pagina -->
+            <%- include("../partials/footer") %>
+    </body>
+
+    </html>

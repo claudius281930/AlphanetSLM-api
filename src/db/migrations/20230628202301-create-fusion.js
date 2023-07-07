@@ -20,10 +20,6 @@ module.exports = {
         type: S.INTEGER,
         allowNull: true,
       },
-      // dateModify: {
-      //   type: S.DATEONLY,
-      //   allowNull: false,
-      // },
       numberFusions: {
         type: Sequelize.INTEGER,
         allowNull: false,

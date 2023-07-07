@@ -12,6 +12,7 @@ module.exports = (sequelize, DataTypes) => {
         autoIncrement: true,
         allowNull: false,
       },
+      // Este campo será excluido na proxima criação do DB
       dateModify: {
         type: DataTypes.DATEONLY,
         allowNull: false,
@@ -52,7 +53,7 @@ module.exports = (sequelize, DataTypes) => {
     Box.hasMany(models.Fusion, {
       as: "fusions", //Nome da relação entre as tabelas envolvidas.
       foreignKey: "box_id", 
-      timestamps: false,
+      timestamps: false,//true
     });
   };
   return Box;
