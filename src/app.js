@@ -5,7 +5,7 @@ const methodOverride = require("method-override");
 const path = require("path");
 
 const mainRouter = require("./routes/mainRouter");
-// const mainUserRouter = require("../src/routes/mainUserRouter");
+const userRouter = require("./routes/userRouter");
 
 app.use(express.static(path.join(__dirname, "../public"))); // precisa definir o caminho certinho para funcionar ../
 app.use(express.urlencoded({ extended: false }));
@@ -15,13 +15,9 @@ app.use(methodOverride("_method"));
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "/views"));
 
-// rotas da sua API
-app.use("/", mainRouter);
-// app.use("/", mainUserRouter);
+// rotas e Middlewares de aplicação(global);
 app.use("/box", mainRouter);
-app.use("/fusion", mainRouter);
-app.use("/color", mainRouter);
-app.use("/link", mainRouter);
+app.use("/register", userRouter);
 
 // error handler
 app.use(function (err, req, res, next) {
