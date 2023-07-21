@@ -1,12 +1,22 @@
 //const db = require("../src/db/models");
 const express = require("express");
 const app = express();
+//const session = require("express-session");
 const methodOverride = require("method-override");
 const path = require("path");
 
+//Criar a tabela `user` na base apos startar o app.js
+//const User = require("./db/models/User");
+
 const mainRouter = require("./routes/mainRouter");
+const registerRouter = require("./routes/registerRouter");
 const userRouter = require("./routes/userRouter");
 
+// session({
+//   secret: "meuProjeto",
+//   resave: true,
+//   saveUninitialized: true,
+// })
 app.use(express.static(path.join(__dirname, "../public"))); // precisa definir o caminho certinho para funcionar ../
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
@@ -16,8 +26,9 @@ app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "/views"));
 
 // rotas e Middlewares de aplicação(global);
-app.use("/box", mainRouter);
-app.use("/register", userRouter);
+app.use("/", mainRouter);
+app.use("/", registerRouter);
+app.use("/", userRouter);
 
 // error handler
 app.use(function (err, req, res, next) {

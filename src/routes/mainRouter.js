@@ -6,8 +6,8 @@ const mainController = require("../controllers/mainController");
 // router.get("/search", mainController.pageSearch);
 
 /* ---- Action get a object for parameter ---- */
-router.get("/", mainController.findBox);
-router.get("/:id", mainController.findByIdBox);
+router.get("/box", mainController.findBox);
+router.get("/box/:id", mainController.findByIdBox);
 router.get("/detail/:name_description", mainController.findDetail);
 
 /* ---- Action for create or FIND a object body page---- */
@@ -23,7 +23,7 @@ router.get("/link", mainController.findLink);
 router.get("/fusion/:id", mainController.findByIdFusion);
 router.get("/color/:id", mainController.findByIdColor);
 router.get("/link/:id", mainController.findByIdLink);
-router.get("/name/:name_description", mainController.findByName);
+router.get("/box/name/:name_description", mainController.findByName);
 router.get("/locale/:locale", mainController.findByLocale);
 
 /* ---- Action for update a object ---- */

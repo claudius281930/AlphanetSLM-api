@@ -23,8 +23,10 @@ module.exports = (sequelize, DataTypes) => {
     {
       tableName: "user",
       underscored: true,
-      timestamps: false, // true
+      timestamps: false, //true para gerar updateAt e createAt;
     }
   );
+  //Cria uma tabela User na base automaticamente;
+  // User.sync();
   return User;
 };
