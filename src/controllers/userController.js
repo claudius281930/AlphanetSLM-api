@@ -1,7 +1,7 @@
 const db = require("../db/models");
+const User = db.User;
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-const User = db.User;
 
 const userController = {
   findUsers: async (req, res) => {
@@ -27,13 +27,14 @@ const userController = {
     }
   },
   findByIdUser: async (req, res) => {
-    const id = req.params.id;
+    const user = { id: req.params.id, name: req.params.id };
     try {
-      const user = await User.findByPk(id);
-      if (!user) {
-        res.status(400).json({ msg: "Erro: usuário não encontrado" }); // 404 = Not Found
+      const userData = await User.findByPk(user.id);
+      if (!userData) {
+        res.status(404).json({ msg: "Erro: usuário não encontrado" });
       } else {
-        res.status(200).json(user);
+        let { id, name } = userData;
+        res.status(200).json({ id, name });
       }
     } catch (err) {
       console.error(err);
@@ -60,37 +61,54 @@ const userController = {
     }
   },
   processLogin: async (req, res) => {
-    const { name, password /* email */ } = req.body;
+    const { name, password } = req.body;
     try {
       // Verificar se o usuário existe na base;
       const getUser = await User.findOne({
         //attributes: ["id", "name"],
         where: { name },
       });
-
+      //Verifica se o usuario não existe;
       if (!getUser) {
         return res.status(400).json({ msg: "Usuário não encontrado" });
       }
+      //Compara a senha que foi gerado com bcrypt;
       const verifyPsw = await bcrypt.compare(password, getUser.password);
-      //Exibe se a senha confere;
+      //Verifica se a senha esta incorreta;
       if (!verifyPsw) {
         return res.status(400).json({ msg: "Senha inválida" });
       }
-      // Gerar o token JWT;
-      const token = jwt.sign({ id: getUser.id }, "meuProjetoProvider", {
-        algorithm: "HS256",
-        expiresIn: "1h",
-      });
-    
+      //Verifica se é admin. Assumindo que o modelo de usuário tem um campo "isAdmin" que indica se o usuário é administrador;
+      const isAdmin = getUser.isAdmin;
+      //Ternrário que verifica o tipo de permissão;
+      const secretKey = isAdmin
+        ? "souAdminDoProjetoProvider"
+        : "meuProjetoProvider";
+      // Gerar o token JWT com o campo "role" definido como "admin" para usuários administradore;
+      let token;
+      //Verifica se é um admin;
+      if (getUser.isAdmin) {
+        // Gerar o token JWT para admin;
+        token = jwt.sign({ id: getUser.id, role: "admin" }, secretKey, {
+          algorithm: "HS256",
+          expiresIn: 30000, //30seg,
+        });
+      } else {
+        //Gera o token JWT para usuario;
+        token = jwt.sign({ id: getUser.id }, secretKey, {
+          algorithm: "HS256",
+          expiresIn: 30000, //30seg,
+        });
+      }
       //Dados do usuario logado;
       const userLoggedComplete = {
         id: getUser.id,
         name: getUser.name,
+        isAdmin,
         token,
       };
       // Autenticação bem-sucedida;
-      res.status(200).json({ msg: "Login bem-sucedido",
-       userLoggedComplete });
+      res.status(200).json({ msg: "Login bem-sucedido", userLoggedComplete });
     } catch (error) {
       console.error(error);
       res.status(500).json({ err: error });

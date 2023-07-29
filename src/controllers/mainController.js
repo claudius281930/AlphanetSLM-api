@@ -205,7 +205,7 @@ const mainController = {
     try {
       const box = await Box.findByPk(id);
       if (!box) {
-        res.status(404).json({ msg: "Caixa não encontrada" }); // 404 = Not Found
+        res.status(404).json({ msg: "Caixa não encontrada" });
       } else {
         res.status(200).json(box);
       }
@@ -310,13 +310,16 @@ const mainController = {
   findByLocale: async (req, res) => {
     const nameLocale = req.params.locale;
     try {
-      const box = await Box.findOne({
+      //Limitando a quantidade de intens a serem retornados;
+      const limit = 6;
+      const box = await Box.findAll({
+        limit: limit,
         where: {
           locale: {
             [db.Sequelize.Op.like]: `%${nameLocale}%`,
           },
         },
-        order: [["locale", "asc"]],
+        order: [["locale", "DESC"]],
       });
 
       if (!box) {
@@ -325,6 +328,33 @@ const mainController = {
           .json({ msg: "Nenhum objeto encontrado com o local fornecido." });
       } else {
         res.status(200).json({ msg: nameLocale, box });
+      }
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ msg: "Erro ao buscar o objeto pelo local." });
+    }
+  },
+  findByNetworkTechnology: async (req, res) => {
+    const nameNetworkTechnology = req.params.networkTechnology;
+    try {
+      //Limitando a quantidade de intens a serem retornados;
+      const limit = 6;
+      const box = await Box.findAll({
+        limit: limit,
+        where: {
+          networkTechnology: {
+            [db.Sequelize.Op.like]: `%${nameNetworkTechnology}%`,
+          },
+        },
+        order: [["networkTechnology", "DESC"]],
+      });
+
+      if (!box) {
+        res
+          .status(404)
+          .json({ msg: "Nenhum objeto encontrado com o local fornecido." });
+      } else {
+        res.status(200).json({ msg: nameNetworkTechnology, box });
       }
     } catch (err) {
       console.error(err);

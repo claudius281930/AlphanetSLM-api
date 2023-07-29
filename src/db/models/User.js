@@ -19,6 +19,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING(225),
         allowNull: false,
       },
+      // isAdmin: {
+      //   type: DataTypes.STRING(10),
+      //   allowNull: false,
+      // },
     },
     {
       tableName: "user",
