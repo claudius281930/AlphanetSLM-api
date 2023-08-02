@@ -6,7 +6,7 @@ module.exports = {
   eUser: async (req, res, next) => {
     //obter o cabeçalho de autorização;
     const authHeader = req.headers.authorization;
-    //console.log(authHeader);
+    console.log(authHeader);
     //Verifica se não existe o cabeçalho;
     if (!authHeader) {
       return res.status(400).json({
@@ -36,7 +36,7 @@ module.exports = {
       console.error(error);
       return res.status(400).json({
         erro: true,
-        msg: "Erro: login necessário para acessar esta página.",
+        msg: "Erro: login necessário(server-side)",
       });
     }
   },

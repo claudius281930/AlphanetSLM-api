@@ -2,8 +2,8 @@ const express = require("express");
 const router = express.Router();
 
 const mainController = require("../controllers/mainController");
-const { eUser } = require("../middlewares/logMiddlaware");
-const { eAdmin } = require("../middlewares/authMiddleware");
+//const { eUser } = require("../middlewares/logMiddlaware");
+/*const { eAdmin } = require("../middlewares/authMiddleware");*/
 
 /* ---- Action get HTTPS: GET ---- */
 router.get("/box", /*eUser,*/ mainController.findBox);

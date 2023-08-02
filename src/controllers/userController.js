@@ -2,6 +2,10 @@ const db = require("../db/models");
 const User = db.User;
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+const session = require("express-session");
+//variável de ambiente para armazenar a chave secreta do JWT
+const secretKey = process.env.JWT_SECRET || "meuProjetoProvider";
+
 
 const userController = {
   findUsers: async (req, res) => {
@@ -10,7 +14,7 @@ const userController = {
       //Faz uma chamada  na base usando o metodo apropriado e armazena o resultado na constante;
       const users = await User.findAll({
         //atributos que quero buscar;
-        attributes: ["id", "name" /*'password'*/],
+        attributes: ["id", "name"],
         order: [["id", "DESC"]],
       });
       //Verifica se os dados existem na basa;
@@ -48,7 +52,7 @@ const userController = {
         where: {
           name: { [db.Sequelize.Op.like]: `%${name}%` },
         },
-        order: [["name", "asc"]],
+        order: [["name", "desc"]],
       });
       if (!user) {
         res.status(400).json({ msg: "Erro: usuário não encontrado." });
@@ -61,52 +65,42 @@ const userController = {
     }
   },
   processLogin: async (req, res) => {
+    //console.log(req.IncomingMessage);// ******** 
     const { name, password } = req.body;
     try {
       // Verificar se o usuário existe na base;
       const getUser = await User.findOne({
-        //attributes: ["id", "name"],
         where: { name },
       });
-      //Verifica se o usuario não existe;
-      if (!getUser) {
-        return res.status(400).json({ msg: "Usuário não encontrado" });
+      console.log(getUser);// ******** 
+      // Verificar se o USUÁRIO existe e se a SENHA está correta. Forma condensada de verificar duas condições;
+      if (!getUser || !(await bcrypt.compare(password, getUser.password))) {
+        console.log(getUser.name);
+        return res.status(400).json({ msg: "Credenciais inválidas" });
       }
-      //Compara a senha que foi gerado com bcrypt;
-      const verifyPsw = await bcrypt.compare(password, getUser.password);
-      //Verifica se a senha esta incorreta;
-      if (!verifyPsw) {
-        return res.status(400).json({ msg: "Senha inválida" });
-      }
-      //Verifica se é admin. Assumindo que o modelo de usuário tem um campo "isAdmin" que indica se o usuário é administrador;
-      const isAdmin = getUser.isAdmin;
-      //Ternrário que verifica o tipo de permissão;
-      const secretKey = isAdmin
-        ? "souAdminDoProjetoProvider"
-        : "meuProjetoProvider";
-      // Gerar o token JWT com o campo "role" definido como "admin" para usuários administradore;
-      let token;
-      //Verifica se é um admin;
-      if (getUser.isAdmin) {
-        // Gerar o token JWT para admin;
-        token = jwt.sign({ id: getUser.id, role: "admin" }, secretKey, {
+      // Após verificar as credenciais do usuário;
+      const token = jwt.sign(
+        { id: getUser.id, role: getUser.role },
+        secretKey,
+        {
+          // Terceiro parametro, mas não obrigatório;
           algorithm: "HS256",
-          expiresIn: 30000, //30seg,
-        });
-      } else {
-        //Gera o token JWT para usuario;
-        token = jwt.sign({ id: getUser.id }, secretKey, {
-          algorithm: "HS256",
-          expiresIn: 30000, //30seg,
-        });
-      }
-      //Dados do usuario logado;
+          expiresIn: 40000, //40seg,
+        }
+      );
+      console.log(token);// ******** 
+      //Dados do usuario logado que será enviado nas requisições HTTPS (Cookie);
       const userLoggedComplete = {
         id: getUser.id,
         name: getUser.name,
-        isAdmin,
+        role: getUser.name,
         token,
       };
+      //console.log(userLoggedComplete);
+      // Armazenar o ID do usuário na sessão
+      req.session.userId = getUser.id;
+      console.log(req.session.userId)// ******** 
+
       // Autenticação bem-sucedida;
       res.status(200).json({ msg: "Login bem-sucedido", userLoggedComplete });
     } catch (error) {
@@ -114,5 +108,30 @@ const userController = {
       res.status(500).json({ err: error });
     }
   },
+  profile: async (req, res) => {
+    // Obter o ID do usuário da sessão
+     const userId = req.session.userId;
+     console.log(userId);// ******
+    try {
+      // Verificar se o usuário está autenticado (ou seja, se o ID do usuário existe na sessão)
+      if (userId) {
+        // Se tive autenticado faz uma busca na base para comparar os IDs:
+        const userData = await User.findByPk(userId);
+        // Verificar se o usuário foi encontrado no banco de dados;
+        if (!userData) {
+          return res.status(404).json({ msg: "Usuário não encontrado" });
+        }
+        // Se tudo estiver correto, retornar os dados do usuário como resposta
+        return res.status(200).json(userData);
+      } else {
+        // O usuário não está autenticado (ou seja, o ID do usuário não existe na sessão)
+        return res.status(401).json({ msg: "Usuário não autenticado(server-side)" });
+      }
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ msg: "Erro interno do servidor" });
+    }
+  },
 };
+
 module.exports = userController;
