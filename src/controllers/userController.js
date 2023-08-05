@@ -1,11 +1,12 @@
 const db = require("../db/models");
 const User = db.User;
-const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 const session = require("express-session");
 //variável de ambiente para armazenar a chave secreta do JWT
-const secretKey = process.env.JWT_SECRET || "meuProjetoProvider";
-
+//const secretKey = process.env.JWT_SECRET || "meuProjetoProvider";
+/* require("dotenv").config()
+const secretKey = process.env.JWT_SECRET */
 
 const userController = {
   findUsers: async (req, res) => {
@@ -65,71 +66,50 @@ const userController = {
     }
   },
   processLogin: async (req, res) => {
-    //console.log(req.IncomingMessage);// ******** 
+    //Receber os dados via body;
     const { name, password } = req.body;
-    try {
-      // Verificar se o usuário existe na base;
-      const getUser = await User.findOne({
-        where: { name },
-      });
-      console.log(getUser);// ******** 
-      // Verificar se o USUÁRIO existe e se a SENHA está correta. Forma condensada de verificar duas condições;
-      if (!getUser || !(await bcrypt.compare(password, getUser.password))) {
-        console.log(getUser.name);
-        return res.status(400).json({ msg: "Credenciais inválidas" });
-      }
-      // Após verificar as credenciais do usuário;
-      const token = jwt.sign(
-        { id: getUser.id, role: getUser.role },
-        secretKey,
-        {
-          // Terceiro parametro, mas não obrigatório;
-          algorithm: "HS256",
-          expiresIn: 40000, //40seg,
-        }
-      );
-      console.log(token);// ******** 
-      //Dados do usuario logado que será enviado nas requisições HTTPS (Cookie);
-      const userLoggedComplete = {
-        id: getUser.id,
-        name: getUser.name,
-        role: getUser.name,
-        token,
-      };
-      //console.log(userLoggedComplete);
-      // Armazenar o ID do usuário na sessão
-      req.session.userId = getUser.id;
-      console.log(req.session.userId)// ******** 
-
-      // Autenticação bem-sucedida;
-      res.status(200).json({ msg: "Login bem-sucedido", userLoggedComplete });
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ err: error });
+    //Buscou no banco por um registro;
+    const user = await User.findOne({
+      where: {
+        name: { [db.Sequelize.Op.like]: `%${name}%` },
+      },
+      order: [["name", "desc"]],
+    });
+    //Extrai o nome do usuario que esta no campo nome;
+    const nameUser = user.dataValues;
+    // Compara as duas senhas;
+    const hashPsw = await bcrypt.compareSync(password, nameUser.password);
+    // Verifica se as credenciais(Nome e Senha) são verdadeiras;
+    if (nameUser.name === name && hashPsw === true) {
+      return res.status(200).json({ msg: "Credenciais válida!", user: user });
+    } else {
+      return res.status(404).json({ msg: "Credenciais inválidas!" });
     }
   },
   profile: async (req, res) => {
-    // Obter o ID do usuário da sessão
-     const userId = req.session.userId;
-     console.log(userId);// ******
+    const { name } = req.body;
+    const userNameProfile = await User.findOne({
+      where: {
+        name: { [db.Sequelize.Op.like]: `%${name}%` },
+      },
+      order: [["name", "desc"]],
+    });
     try {
-      // Verificar se o usuário está autenticado (ou seja, se o ID do usuário existe na sessão)
-      if (userId) {
-        // Se tive autenticado faz uma busca na base para comparar os IDs:
-        const userData = await User.findByPk(userId);
-        // Verificar se o usuário foi encontrado no banco de dados;
-        if (!userData) {
-          return res.status(404).json({ msg: "Usuário não encontrado" });
-        }
-        // Se tudo estiver correto, retornar os dados do usuário como resposta
-        return res.status(200).json(userData);
+      const userFindName = userNameProfile;
+      if (userFindName.name === name) {
+        return res.status(200).json({
+          msg: "Usuario encontrado!",
+          page: "'Profile'",
+          userFindName,
+        });
       } else {
-        // O usuário não está autenticado (ou seja, o ID do usuário não existe na sessão)
-        return res.status(401).json({ msg: "Usuário não autenticado(server-side)" });
+        return res
+          .status(404)
+          .json({ mgs: "Usuario: inválido ou não encontrado!" });
       }
     } catch (error) {
-      console.error(error);
-      return res.status(500).json({ msg: "Erro interno do servidor" });
+      console.log(error);
+      return res.status(500).json({ mgs: "erro no servidor" });
     }
   },
 };

@@ -6,10 +6,9 @@ const userController = {
   createUser: async (req, res) => {
     try {
       let { name, password } = req.body;
-      let hash = bcrypt.hashSync(password, 8);
-      /*console.log(hash);*/
-      //Somente informa se as senhas são compativeis
-      //console.log(bcrypt.compareSync(password, hash));
+      const salt = await bcrypt.genSaltSync(8);
+      let hash = bcrypt.hashSync(password, salt);
+            
       let user = await User.create({
         name: name,
         password: hash,
@@ -17,7 +16,7 @@ const userController = {
       if (user.name === name) {
         res.status(201).json({ msg: "Usuario criado na base!" });
       } else {
-        res.status(500).json({ msg: "Falha ao tentar criar usuario." });
+        res.status(500).json({ msg: "Falha ao registrar o usuario." });
       }
     } catch (err) {
       console.error(err);
