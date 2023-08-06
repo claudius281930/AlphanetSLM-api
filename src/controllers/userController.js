@@ -87,16 +87,22 @@ const userController = {
     }
   },
   profile: async (req, res) => {
-    const { name } = req.body;
-    const userNameProfile = await User.findOne({
-      where: {
-        name: { [db.Sequelize.Op.like]: `%${name}%` },
-      },
-      order: [["name", "desc"]],
-    });
-    try {
+    /*try {
+      const { name } = req.body;
+      // Validação do NOME do usuário;
+      if (!name || typeof name !== "string") {
+        return res.status(400).json({ mgs: "Nome de usuário inválido." });
+      }
+      // Pesquisar usuário;
+      const userNameProfile = await User.findOne({
+        where: {
+          name: { [db.Sequelize.Op.like]: `%${name}%` },
+        },
+        order: [["name", "desc"]],
+      });
+      // Verificar se o usuário foi encontrado;
       const userFindName = userNameProfile;
-      if (userFindName.name === name) {
+      if (userFindName) {
         return res.status(200).json({
           msg: "Usuario encontrado!",
           page: "'Profile'",
@@ -105,12 +111,12 @@ const userController = {
       } else {
         return res
           .status(404)
-          .json({ mgs: "Usuario: inválido ou não encontrado!" });
+          .json({ mgs: "Usuario inválido ou não encontrado!" });
       }
     } catch (error) {
       console.log(error);
       return res.status(500).json({ mgs: "erro no servidor" });
-    }
+    }*/
   },
 };
 
