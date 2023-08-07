@@ -11,7 +11,7 @@ router.get("/user/name/:name", eUser, userController.findUserName);
 
 //Processa os dados para efetuar o login;
 router.post("/login", userController.processLogin);
-//Autoriza a exibição da pagina do Perfil pelo Front-End;
-router.post("/profile", eUser, userController.profile);
+// Somente para testes no postman;
+router.get("/profile", eUser, userController.profile);
 
 module.exports = router;

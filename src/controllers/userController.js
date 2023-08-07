@@ -66,57 +66,61 @@ const userController = {
     }
   },
   processLogin: async (req, res) => {
-    //Receber os dados via body;
-    const { name, password } = req.body;
-    //Buscou no banco por um registro;
-    const user = await User.findOne({
-      where: {
-        name: { [db.Sequelize.Op.like]: `%${name}%` },
-      },
-      order: [["name", "desc"]],
-    });
-    //Extrai o nome do usuario que esta no campo nome;
-    const nameUser = user.dataValues;
-    // Compara as duas senhas;
-    const hashPsw = await bcrypt.compareSync(password, nameUser.password);
-    // Verifica se as credenciais(Nome e Senha) são verdadeiras;
-    if (nameUser.name === name && hashPsw === true) {
-      return res.status(200).json({ msg: "Credenciais válida!", user: user });
-    } else {
-      return res.status(404).json({ msg: "Credenciais inválidas!" });
-    }
-  },
-  profile: async (req, res) => {
-    /*try {
-      const { name } = req.body;
-      // Validação do NOME do usuário;
-      if (!name || typeof name !== "string") {
-        return res.status(400).json({ mgs: "Nome de usuário inválido." });
-      }
-      // Pesquisar usuário;
-      const userNameProfile = await User.findOne({
+    try {
+      //Receber os dados via body(corpo da Requisição) do formulário;
+      const { name, password } = req.body;
+
+      //Buscou no banco por um registro;
+      const user = await User.findOne({
         where: {
           name: { [db.Sequelize.Op.like]: `%${name}%` },
         },
         order: [["name", "desc"]],
       });
-      // Verificar se o usuário foi encontrado;
-      const userFindName = userNameProfile;
-      if (userFindName) {
+
+      // Verificar se o usuário NÃO foi encontrado
+      if (!user) {
+        return res.status(404).json({ msg: "Usuario não encontrado!" });
+      }
+      //Extrai o nome do usuario que esta no campo nome;
+      const nameUser = user.dataValues;
+      // Compara as duas senhas;
+      const hashPsw = await bcrypt.compareSync(password, nameUser.password);
+      // Autenticação. Verifica se as credenciais(Nome e Senha) são verdadeiras;
+      if (nameUser.name === name && hashPsw === true) {
+        // Se o usuário for autenticado com sucesso. Cria a sessão com estes dados;
+        req.session.user = {
+          id: user.id,
+          name: user.name,
+        };
+        //console.log(req.session);
+        // Enviando os dados para o cliente atraves do 'Response' em formato JSON;
         return res.status(200).json({
-          msg: "Usuario encontrado!",
-          page: "'Profile'",
-          userFindName,
+          msg: "Credenciais válida. Sessão criada!",
+          user: req.session.user,
         });
       } else {
-        return res
-          .status(404)
-          .json({ mgs: "Usuario inválido ou não encontrado!" });
+        return res.status(404).json({
+          msg: "Credenciais inválidas!",
+        });
       }
     } catch (error) {
-      console.log(error);
-      return res.status(500).json({ mgs: "erro no servidor" });
-    }*/
+      console.error(error);
+      return res.status(500).json({ msg: "Erro inteno do servidor" });
+    }
+  },
+  profile: async (req, res) => {
+    try {
+      let sessionUser = req.session.user;
+      //console.log(sessionUser);
+      res.status(200).json({
+        mgs: "Autenticado pela sessão!",
+        user: sessionUser,
+      });
+    } catch (error) {
+      console.error(error);
+      return res.status(401).json({ msg: "Erro: credenciais inconsistentes." });
+    }
   },
 };
 
