@@ -7,11 +7,28 @@ const Color = db.Color;
 const Link = db.Link;
 
 const mainController = {
-  /* ****************************** */
-  pageFormCreateBox: (req, res) => {
-    const currentDate = new Date().toISOString().split("T")[0];
-    res.render("create/create_box_form", { currentDate });
+  pageSearch: async (req, res) => {
+    //let token = req.headers["authorization"];
+    res.status(202).json({
+      msg: "Conexão aceita. Exibição da página permitida.",
+    });
   },
+  pageFormCreateBox: (req, res) => {
+    res
+      .status(202)
+      .json({ msg: "Conexão aceita. Exibição da página permitida." });
+  },
+  pageFormDeleteBox: async (req, res) => {
+    res
+      .status(202)
+      .json({ msg: "Conexão aceita. Exibição da página permitida." });
+  },
+  pageFormUpdateBox: async (req, res) => {
+    res
+      .status(202)
+      .json({ msg: "Conexão aceita. Exibição da página permitida." });
+  },
+  // ***********************************
   createBox: async (req, res) => {
     const body = req.body;
     try {
@@ -50,12 +67,6 @@ const mainController = {
     //     res.render("error", { nameBox: [] });
     //   }
   },
-  pageFormUpdateBox: async (req, res) => {
-    const currentDate = new Date().toISOString().split("T")[0];
-    const id = req.body.id;
-    res.render("update/updateBox", { currentDate, id: id });
-  },
-  /* *********************** */
   createFusion: async (req, res) => {
     const body = req.body;
     try {
@@ -397,4 +408,5 @@ const mainController = {
     }
   },
 };
+
 module.exports = mainController;

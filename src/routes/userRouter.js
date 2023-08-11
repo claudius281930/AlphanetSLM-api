@@ -8,10 +8,10 @@ const userController = require("../controllers/userController");
 router.get("/users", eUser, userController.findUsers);
 router.get("/user/:id", eUser, userController.findByIdUser);
 router.get("/user/name/:name", eUser, userController.findUserName);
+// Somente para testes no postman;
+router.get("/profile", eUser, userController.profile);
 
 //Processa os dados para efetuar o login;
 router.post("/login", userController.processLogin);
-// Somente para testes no postman;
-router.get("/profile", eUser, userController.profile);
 
 module.exports = router;

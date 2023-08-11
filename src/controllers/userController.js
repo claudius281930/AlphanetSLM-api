@@ -2,11 +2,7 @@ const db = require("../db/models");
 const User = db.User;
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const session = require("express-session");
-//variável de ambiente para armazenar a chave secreta do JWT
-//const secretKey = process.env.JWT_SECRET || "meuProjetoProvider";
-/* require("dotenv").config()
-const secretKey = process.env.JWT_SECRET */
+const secretKey = "m3uPr0j3tOPr0v1dEr";
 
 const userController = {
   findUsers: async (req, res) => {
@@ -21,7 +17,7 @@ const userController = {
       //Verifica se os dados existem na basa;
       if (users !== undefined) {
         //Retorna um Response com o status code e os dados em json se existir;
-        res.status(200).json({ users });
+        res.status(200).json({ msg: "Autenticado", users });
       } else {
         //Retorna um Response com o status code e os dados em json caso seja undefined;
         res.status(500).json({ msg: "Usuário NÂO existe" });
@@ -39,7 +35,7 @@ const userController = {
         res.status(404).json({ msg: "Erro: usuário não encontrado" });
       } else {
         let { id, name } = userData;
-        res.status(200).json({ id, name });
+        res.status(200).json({ msg: "Autenticado", id, name });
       }
     } catch (err) {
       console.error(err);
@@ -58,7 +54,7 @@ const userController = {
       if (!user) {
         res.status(400).json({ msg: "Erro: usuário não encontrado." });
       } else {
-        res.status(200).json({ msg: name, user });
+        res.status(200).json({ msg: "Autenticado", name: name, user });
       }
     } catch (error) {
       console.error(error);
@@ -77,7 +73,6 @@ const userController = {
         },
         order: [["name", "desc"]],
       });
-
       // Verificar se o usuário NÃO foi encontrado
       if (!user) {
         return res.status(404).json({ msg: "Usuario não encontrado!" });
@@ -85,22 +80,25 @@ const userController = {
       //Extrai o nome do usuario que esta no campo nome;
       const nameUser = user.dataValues;
       // Compara as duas senhas;
-      const hashPsw = await bcrypt.compareSync(password, nameUser.password);
+      const hashPsw = bcrypt.compareSync(password, nameUser.password);
+
       // Autenticação. Verifica se as credenciais(Nome e Senha) são verdadeiras;
       if (nameUser.name === name && hashPsw === true) {
-        // Se o usuário for autenticado com sucesso. Cria a sessão com estes dados;
-        req.session.user = {
-          id: user.id,
-          name: user.name,
-        };
-        //console.log(req.session);
-        // Enviando os dados para o cliente atraves do 'Response' em formato JSON;
+        // Gerar o token JWT
+        const token = jwt.sign({ 
+          id: user.id, 
+          name: user.name, 
+        }, secretKey, 
+          { expiresIn: 240 },);//segundos
+        // Response o dados do usuario mais o token;
         return res.status(200).json({
-          msg: "Credenciais válida. Sessão criada!",
-          user: req.session.user,
+          msg: "Autenticado",
+          id: user.id, 
+          name: user.name,
+          token,
         });
       } else {
-        return res.status(404).json({
+        return res.status(401).json({
           msg: "Credenciais inválidas!",
         });
       }
@@ -111,12 +109,8 @@ const userController = {
   },
   profile: async (req, res) => {
     try {
-      let sessionUser = req.session.user;
-      //console.log(sessionUser);
-      res.status(200).json({
-        mgs: "Autenticado pela sessão!",
-        user: sessionUser,
-      });
+      res.send("Bem vindo ao Perfil")
+      
     } catch (error) {
       console.error(error);
       return res.status(401).json({ msg: "Erro: credenciais inconsistentes." });
