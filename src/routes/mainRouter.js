@@ -20,6 +20,7 @@ router.get("/box/:id", eUser, mainController.findByIdBox);
 router.get("/fusion/:id", eUser, mainController.findByIdFusion);
 router.get("/color/:id", eUser, mainController.findByIdColor);
 router.get("/link/:id", eUser, mainController.findByIdLink);
+//********************************************************************************
 router.get("/box/name/:name_description", eUser, mainController.findByName);
 router.get("/box/locale/:locale", eUser, mainController.findByLocale);
 router.get("/box/net/:networkTechnology", eUser, mainController.findByNetworkTechnology);

@@ -9,9 +9,9 @@ const eUser = {
     // Verifica se não existe o cabeçalho;
     if (!authHeader) {
       // Response com a exceção;
-      return res.status(400).json({
+      return res.status(401).json({
         erro: true,
-        msg: "Middleware: erro token não existe",
+        msg: "Você precisa fazer o login para acessar esta pagina ou recursos.",
       });
     }
     try {
@@ -20,12 +20,12 @@ const eUser = {
       // Verifica se, e somente se, o token NÃO existe;
       if (!token) {
          // Response com a exceção;
-        return res.status(400).json({
+        return res.status(401).json({
           erro: true,
-          msg: "Middleware: erro token inválido",
+          msg: "Suas credenciais são inconsistentes.",
         });
       }
-      console.log({ headersToken: token });
+//      console.log({ headersToken: token });
       // Decodifica o token passado para garantir a integridade e validade do mesmo;
       const decode = await promisify(jwt.verify)(token, secretKey);
       req.user = decode.id;
