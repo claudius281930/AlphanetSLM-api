@@ -89,7 +89,7 @@ const userController = {
           id: user.id, 
           name: user.name, 
         }, secretKey, 
-          { expiresIn: 600 },);//segundos
+          { expiresIn: 6000 },);//segundos
         // Response o dados do usuario mais o token;
         return res.status(200).json({
           msg: "Autenticado",
