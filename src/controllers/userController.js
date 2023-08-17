@@ -85,15 +85,36 @@ const userController = {
       // Autenticação. Verifica se as credenciais(Nome e Senha) são verdadeiras;
       if (nameUser.name === name && hashPsw === true) {
         // Gerar o token JWT
-        const token = jwt.sign({ 
-          id: user.id, 
-          name: user.name, 
-        }, secretKey, 
-          { expiresIn: 6000 },);//segundos
+        const token = jwt.sign(
+          {
+            id: user.id,
+            name: user.name,
+          },
+          secretKey,
+          {
+            // Tempo de vida do Token;
+            expiresIn: "1d",
+            // Algoritmo de assinatura;
+            algorithm: "HS256",
+            // Emitente do token;
+            issuer: "localhost",
+            // Audiência do token
+            audience: "usuarios",
+            // Assunto do token;
+            subject: "autenticacao",
+            // ID único do token;
+            jwtid: user.name,
+            // Informações adicionais no cabeçalho;
+            header: {
+              typ: "JWT",
+            },
+          }
+        );
+        console.log({TOKEN:token})
         // Response o dados do usuario mais o token;
         return res.status(200).json({
           msg: "Autenticado",
-          id: user.id, 
+          id: user.id,
           name: user.name,
           token,
         });
@@ -109,8 +130,7 @@ const userController = {
   },
   profile: async (req, res) => {
     try {
-      res.send("Bem vindo ao Perfil")
-      
+      res.send("Bem vindo ao Perfil");
     } catch (error) {
       console.error(error);
       return res.status(401).json({ msg: "Erro: credenciais inconsistentes." });

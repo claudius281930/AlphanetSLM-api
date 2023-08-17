@@ -23,7 +23,7 @@ app.use(
     saveUninitialized: false, //true
     cookie: {
       // Tempo de vida do cookie da sessão em milissegundos (1 hora neste exemplo);
-      maxAge: 400000,
+      maxAge: 24 * 60 * 60 * 1000,
       // TRUE? se o cookie só pode ser enviado através de conexões HTTPS;
       secure: false,
       // TRUE: Impede que o cookie seja modificado pelo JavaScript do cliente. Mais seguro;
