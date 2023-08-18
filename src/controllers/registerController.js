@@ -14,13 +14,13 @@ const userController = {
         password: hash,
       });
       if (user.name === name) {
-        res.status(201).json({ msg: "Usuario criado na base!" });
+        res.redirect(201,"/login")
       } else {
-        res.status(500).json({ msg: "Falha ao registrar o usuario." });
+        res.status(500).send("Falha ao registrar o usuario.");
       }
     } catch (err) {
       console.error(err);
-      res.status(400).json({ msg: "Erro ao criar a usuario" });
+      res.redirect(400,"/");
     }
   },
 };
