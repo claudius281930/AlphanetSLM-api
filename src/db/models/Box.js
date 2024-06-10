@@ -1,10 +1,10 @@
-//modelo de origem (source model) em relação ao modelo Fusion
+// modelo de origem (source model) em relação ao modelo Fusion
 const { sequelize, DataTypes } = require("sequelize");
 const Fusion = require("../models/Fusion");
 
 module.exports = (sequelize, DataTypes) => {
   const Box = sequelize.define(
-    "Box",
+    "Box", // Alias
     {
       id: {
         type: DataTypes.INTEGER,
@@ -34,26 +34,27 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      // img: {
-      //   type: DataTypes.BLOB("medium"),
-      //   allowNull: true,
-      // },
-      // observation: {
-      //   type: DataTypes.STRING,
-      //   allowNull: true,
-      // },
+      /* img: {
+         type: DataTypes.BLOB("medium"),
+         allowNull: true,
+       },
+       observation: {
+         type: DataTypes.STRING,
+         allowNull: true,
+       },*/
     },
     {
-      tableName: "box",
+      tableName: "box", // Mapeia a mesma tabela no BD
       underscored: true,
       timestamps: false, //true
     }
   );
+  //Criando a associação
   Box.associate = (models) => {
     Box.hasMany(models.Fusion, {
       as: "fusions", //Nome da relação entre as tabelas envolvidas.
-      foreignKey: "box_id", 
-      timestamps: false,//true
+      foreignKey: "box_id", //Campo da associação presente em todas as tabelas de destino;
+      timestamps: false, //true
     });
   };
   return Box;

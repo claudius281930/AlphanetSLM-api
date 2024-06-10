@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       name: {
         type: DataTypes.STRING(225),
         allowNull: false,
-        unique: true,
+        //unique: true,
       },
       password: {
         type: DataTypes.STRING(225),
@@ -26,7 +26,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       tableName: "user",
-      underscored: true,
+      underscored: true, // boxId => box_id
       timestamps: false, //true para gerar updateAt e createAt;
     }
   );

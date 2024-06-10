@@ -1,12 +1,10 @@
 //const { Op } = require("sequelize");
+const { Error, CHAR } = require("sequelize");
 const db = require("../db/models");
-
 const Box = db.Box;
-const Fusion = db.Fusion;
-const Color = db.Color;
-const Link = db.Link;
 
 const mainController = {
+  // chave : valor
   pageSearch: async (req, res) => {
     //let token = req.headers["authorization"];
     res.status(202).json({
@@ -28,7 +26,7 @@ const mainController = {
       .status(202)
       .json({ msg: "Conexão aceita. Exibição da página permitida." });
   },
-  // ***********************************
+  //CREATE
   createBox: async (req, res) => {
     const body = req.body;
     try {
@@ -39,85 +37,32 @@ const mainController = {
       res.status(400).json({ msg: "Erro ao criar a caixa" });
     }
   },
-  getBoxById: async (req, res) => {
-    //   const id = req.body.id;
-    //   console.log({ valor: id });
-    //   try {
-    //     const response = await boxRequest.getBoxId(id);
-    //     const box = response.data;
-    //     console.log(box);
-    //     if (!box) {
-    //       return res.render("error", { msg: "caixa não encontrada" });
-    //     } else {
-    //       return res.render("find/boxId", { idBox: box });
-    //     }
-    //   } catch (error) {
-    //     if (error.response) {
-    //       // Erro de resposta da API
-    //       console.log(error.response.status);
-    //       console.log(error.response.data);
-    //       console.log(error.response.headers);
-    //     } else if (error.request) {
-    //       // Erro de requisição (sem resposta)
-    //       console.log(error.request);
-    //     } else {
-    //       // Outro tipo de erro
-    //       console.log("Erro", error.message);
-    //     }
-    //     res.render("error", { nameBox: [] });
-    //   }
-  },
-  createFusion: async (req, res) => {
-    const body = req.body;
-    try {
-      const object = await Fusion.create(body);
-      res.status(201).json({ msg: "Fusão criada com sucesso!" });
-    } catch (err) {
-      console.error(err);
-      res.status(400).json({ msg: "Erro ao criar a fusão" });
-    }
-  },
-  createColor: async (req, res) => {
-    const body = req.body;
-    try {
-      const object = await Color.create(body);
-      res.status(201).json({ msg: "Cores criada com sucesso!" });
-    } catch (err) {
-      console.error(err);
-      res.status(400).json({ msg: "Erro ao criar as cores" });
-    }
-  },
-  createLink: async (req, res) => {
-    const body = req.body;
-    try {
-      const object = await Link.create(body);
-      res.status(201).json({ msg: "Link criada com sucesso!" });
-    } catch (err) {
-      console.error(err);
-      res.status(400).json({ msg: "Erro ao criar link" });
-    }
-  },
+  // Refatorado!!
   findBox: async (req, res) => {
     try {
       // Definir uma pagina padrão;
-      let { page = 1 } = req.query;
+      let { page = 1 } = req.query; //req.params.body;
       //Garantir que a page sempre seja um numero inteiro;
-      page = parseInt(page);
+      page = +page;
       // Definir uma página padrão válida
       if (isNaN(page) || page <= 0) {
         page = 1;
       }
       //Limitando a quantidade de intens a serem retornados;
-      const limit = 6;
+      const limit = 2;
       //Calcula a paginação com os seus itens de exibição
       let offset = page * limit - limit;
-      //Pegando a quantidade de dados e os dados em si;
-      let { count: total, rows: boxes } = await Box.findAndCountAll({
-        limit: limit,
-        //Calcualando a quantidade de intens por paginas;
-        offset: offset, //(1 * 6) - 6 = 0(pagina);
+      //Pegando a quantidade de dados e os dados em si. Row = linha(values);
+      let boxes = await Box.findAll({
+        //Ordena o ID do mais alto para o mais baixo;
         order: [["id", "DESC"]],
+        //Limitando a quantidade de intens a serem retornados;
+        limit,
+        //Calcualando a quantidade de intens por paginas;
+        offset,
       });
+      // Não favorece a peformance = { count: total, rows: boxes }= await Box.findAndCountAll;
+      const total = await Box.count();
       //Retorna o status code para uma requisição bem-sucedida.
       return res.status(200).json({ boxes, total });
     } catch (error) {
@@ -128,46 +73,23 @@ const mainController = {
       });
     }
   },
-  //TB-Fusion;
-  findFusion: async (req, res) => {
+  // Refatorado!!
+  findDetailBox: async (req, res) => {
     try {
-      const fusions = await Fusion.findAll();
-      res.status(200).json(fusions);
-    } catch (err) {
-      console.error(err);
-      res.status(500).json({ msg: "Erro ao buscar as fusões" });
-    }
-  },
-  //TB-Color;
-  findColor: async (req, res) => {
-    try {
-      const colors = await Color.findAll(/*{ limit: 10 }*/);
-      res.status(200).json(colors);
-    } catch (err) {
-      console.error(err);
-      res.status(500).json({ msg: "Erro ao buscar as cores" });
-    }
-  },
-  //TB-Link;
-  findLink: async (req, res) => {
-    try {
-      const links = await Link.findAll(/*{ limit: 10 }*/);
-      res.status(200).json(links);
-    } catch (err) {
-      console.error(err);
-      res.status(500).json({ msg: "Erro ao buscar os links" });
-    }
-  },
-  findDetail: async (req, res) => {
-    const nameDescription = req.params.name_description;
-    try {
+      //Rota parametrizada.
+      const nameDescription = req.params.name_description;
+      if (!nameDescription || !/^[a-zA-Z]+$/.test(nameDescription)) {
+        throw new Error(
+          "Nome inválido. Por favor, forneça um nome válido contendo apenas caracteres alfabéticos."
+        );
+      }
       const box = await Box.findAll({
         where: {
           name_description: {
             [db.Sequelize.Op.like]: `%${nameDescription}%`,
           },
         },
-        //Carrega os dados do modelo associado;
+        //Inclui os dados do modelo associado!!
         include: [
           {
             //Definição do modelo que iré se relacionamento " Fusion ";
@@ -176,7 +98,7 @@ const mainController = {
             as: "fusions",
             //A associação é obrigatória;
             required: true,
-            //Carrega os dados do modelo associado;
+            //Inclui os dados do modelo associado!!
             include: [
               {
                 //Definição do modelo que iré se relacionamento " Color ";
@@ -185,7 +107,7 @@ const mainController = {
                 as: "colouring",
                 //A associação é obrigatória
                 required: true,
-                //Carrega os dados do modelo associado;
+                //Inclui os dados do modelo associado!!
                 include: [
                   {
                     //Definição do modelo que iré se relacionamento " Link ";
@@ -200,33 +122,34 @@ const mainController = {
             ],
           },
         ],
-        //Ordenar o tipo de dados por ascendente;
-        order: [["name_description", "asc"]],
       });
-      //Responde com status code 200 e retorna os objeto json;
+      //Responde com status code 200, o nome do objeto e todo os dados do objeto. Isso tudo em json;
       res.status(200).json({ msg: nameDescription, box });
     } catch (err) {
       console.error(err);
-      res.status(500).json({ msg: "Erro ao buscar os detalhes da caixa" });
+      res.status(400).json({ msg: err.message });
     }
   },
-  //TB-Box ID;
+  // Refatorado!!
   findByIdBox: async (req, res) => {
-    const id = req.params.id;
     try {
+      const id = req.params.id;
+
+      //Buscar no db.
       const box = await Box.findByPk(id);
+      //Verificar se não encontrou.
       if (!box) {
-        res.status(404).json({ msg: "Caixa não encontrada" });
+        res.status(404).json({ msg: "Caixa não encontrada ou não exite!" });
       } else {
         res.status(200).json(box);
       }
     } catch (err) {
       console.error(err);
-      res.status(500).json({ msg: "Erro ao buscar a caixa" });
+      res.status(400).json({ msg: err.message });
     }
   },
   //ainda fazendo
-  findBoxBySearch: async (req, res) => {
+  /*findBoxBySearch: async (req, res) => {
     let searchTerm = req.params.searchTerm;
 
     let box;
@@ -251,56 +174,13 @@ const mainController = {
       console.error(error, "Algo deu errado!");
       return res.status(500).send("Erro interno do servidor.");
     }
-  },
-  //TB-Fusion;
-  findByIdFusion: async (req, res) => {
-    const id = req.params.id;
-    try {
-      const fusions = await Fusion.findByPk(id);
-      if (!fusions) {
-        res.status(404).json({ msg: "Fusão não encontrada" }); // 404 = Not Found
-      } else {
-        res.status(200).json(fusions);
-      }
-    } catch (err) {
-      console.error(err);
-      res.status(500).json({ msg: "Erro ao buscar a fusão" });
-    }
-  },
-  //TB-Color;
-  findByIdColor: async (req, res) => {
-    const id = req.params.id;
-    try {
-      const colors = await Color.findByPk(id);
-      if (!colors) {
-        res.status(404).json({ msg: "Cores não encontrada" }); // 404 = Not Found
-      } else {
-        res.status(200).json(colors);
-      }
-    } catch (err) {
-      console.error(err);
-      res.status(500).json({ msg: "Erro ao buscar as cores" });
-    }
-  },
-  //TB-Link;
-  findByIdLink: async (req, res) => {
-    const id = req.params.id;
-    try {
-      const links = await Link.findByPk(id);
-      if (!links) {
-        res.status(404).json({ msg: "Link não encontrada" }); // 404 = Not Found
-      } else {
-        res.status(200).json(links);
-      }
-    } catch (err) {
-      console.error(err);
-      res.status(500).json({ msg: "Erro ao buscar o link" });
-    }
-  },
+  },*/
+  // Refatorado!!
   findByName: async (req, res) => {
-    const nameDescription = req.params.name_description;
     try {
+      const nameDescription = req.params.name_description;
       const box = await Box.findOne({
+        // Config para consultar o DB.
         where: {
           name_description: { [db.Sequelize.Op.like]: `%${nameDescription}%` },
         },
@@ -318,21 +198,35 @@ const mainController = {
       res.status(500).json({ msg: "Erro ao buscar a caixa" });
     }
   },
+  // Refatorado!!
   findByLocale: async (req, res) => {
-    const nameLocale = req.params.locale;
     try {
+      const nameLocale = req.params.locale;
+      // Definir uma pagina padrão;
+      let { page = 1 } = req.query;
+      //Garantir que a page sempre seja um numero inteiro;
+      page = +page;
+      // Definir uma página padrão válida
+      if (isNaN(page) || page <= 0) {
+        page = 1;
+      }
       //Limitando a quantidade de intens a serem retornados;
-      const limit = 6;
+      const limit = 2;
+      //Calcula a paginação com os seus itens de exibição
+      let offset = page * limit - limit;
+      //Pegando a quantidade de dados e os dados em si. Row = linha(values);
       const box = await Box.findAll({
-        limit: limit,
         where: {
           locale: {
             [db.Sequelize.Op.like]: `%${nameLocale}%`,
           },
         },
-        order: [["locale", "DESC"]],
+        //Ordena o ID do mais alto para o mais baixo;
+        order: [["id", "DESC"]],
+        limit,
+        offset,
       });
-
+      // Verifica se NÃO existe;
       if (!box) {
         res
           .status(404)
@@ -342,30 +236,49 @@ const mainController = {
       }
     } catch (err) {
       console.error(err);
-      res.status(500).json({ msg: "Erro ao buscar o objeto pelo local." });
+      res.status(500).json({ msg: "Erro ao buscar o objeto pelo local.", err });
     }
   },
+  // Refatorado!!
   findByNetworkTechnology: async (req, res) => {
-    const nameNetworkTechnology = req.params.networkTechnology;
     try {
+      const nameNetworkTechnology = req.params.networkTechnology;
+      // Definir uma pagina padrão;
+      let { page = 1 } = req.query;
+      //Garantir que a page sempre seja um numero inteiro;
+      page = +page;
+      // Definir uma página padrão válida
+      if (isNaN(page) || page <= 0) {
+        page = 1;
+      }
       //Limitando a quantidade de intens a serem retornados;
-      const limit = 6;
+      const limit = 2;
+      //Calcula a paginação com os seus itens de exibição
+      let offset = page * limit - limit;
+      //Pegando a quantidade de dados e os dados em si. Row = linha(values);
       const box = await Box.findAll({
-        limit: limit,
         where: {
           networkTechnology: {
             [db.Sequelize.Op.like]: `%${nameNetworkTechnology}%`,
           },
         },
-        order: [["networkTechnology", "DESC"]],
+        //Ordena o ID do mais alto para o mais baixo;
+        order: [["id", "DESC"]],
+        //Limitando a quantidade de intens a serem retornados;
+        limit,
+        //Calcualando a quantidade de intens por paginas;
+        offset,
       });
-
+      const total = await Box.count();      
+      // Verifica se NÃO existe;
       if (!box) {
-        res
-          .status(404)
-          .json({ msg: "Nenhum objeto encontrado com o local fornecido." });
+        res.status(404).json({ msg: "Nenhum objeto encontrado com o local fornecido." });
+      } 
+      // Verifica se existe intens para ser paginados.
+      else if (box < offset) {
+        return res.status(200).json({ mgs: "Não há mais páginas!" });
       } else {
-        res.status(200).json({ msg: nameNetworkTechnology, box });
+        res.status(200).json({ msg: nameNetworkTechnology, box, total });
       }
     } catch (err) {
       console.error(err);

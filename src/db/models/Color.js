@@ -1,10 +1,10 @@
-//modelo de origem (source model) em relação ao modelo Link
+// modelo de origem (source model) em relação ao modelo Link
 const { sequelize, DataTypes } = require("sequelize");
 const Link =require("../models/Link");
 
 module.exports = (sequelize, DataTypes) => {
   const Color = sequelize.define(
-    "Color",
+    "Color",// Alias
     {
       id: {
         type: DataTypes.INTEGER,
@@ -12,6 +12,7 @@ module.exports = (sequelize, DataTypes) => {
         autoIncrement: true,
         allowNull: false,
       },
+      // Campo da associação.
       boxId: {
         type: DataTypes.INTEGER,
         allowNull: true,
@@ -22,15 +23,15 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
     {
-      tableName: "color",
-      underscored: true,
+      tableName: "color", // Mapeia a mesma tabela no BD
+      underscored: true, // boxId => box_id
       timestamps: false,
     }
   );
   Color.associate = (models) => {
     Color.hasOne(models.Link, {
-      as: "links",
-      foreignKey: "box_id", 
+      as: "links", //Nome da relação entre as tabelas envolvidas.
+      foreignKey: "box_id", //Campo da associação presente em todas as tabelas de destino;
       timestamps: false,
     });
     /*

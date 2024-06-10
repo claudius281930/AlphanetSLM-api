@@ -5,7 +5,8 @@ const { promisify } = require("util");
 const eUser = {
   eUser: async (req, res, next) => {
     //obter o cabeçalho de autorização.'Bearer' e o 'token' AMBOS;
-    const authHeader = req.headers.authorization;// campo que conterá o cabeçalho;
+    const authHeader = req.headers.authorization; // campo que conterá o cabeçalho;
+    
     // Verifica se não existe o cabeçalho;
     if (!authHeader) {
       // Response com a exceção;
@@ -17,15 +18,16 @@ const eUser = {
     try {
       //Somente o Token [bearer,token]. Exclui o bearer;
       const [, token] = authHeader.split(" ");
+      console.log(token);
       // Verifica se, e somente se, o token NÃO existe;
       if (!token) {
-         // Response com a exceção;
+        // Response com a exceção;
         return res.status(401).json({
           erro: true,
           msg: "Suas credenciais são inconsistentes.",
         });
       }
-//      console.log({ headersToken: token });
+
       // Decodifica o token passado para garantir a integridade e validade do mesmo;
       const decode = await promisify(jwt.verify)(token, secretKey);
       req.user = decode.id;

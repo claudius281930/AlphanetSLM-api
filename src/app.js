@@ -3,8 +3,7 @@ const methodOverride = require("method-override");
 const session = require("express-session");
 const path = require("path");
 
-//Criar a tabela `user` na base apos startar o app.js
-//const User = require("./db/models/User");
+//const User = require("./db/models/User");//Criar a tabela `user` na base apos startar o app.js
 
 const mainRouter = require(path.join(__dirname, "./routes/mainRouter"));
 const registerRouter = require(path.join(__dirname, "./routes/registerRouter"));
@@ -18,7 +17,7 @@ app.use(
     // Uma chave secreta usada para assinar o cookie da sessão;
     secret: "m3uPr0j3tOPr0v1dEr",
     //garantir que a sessão não expire enquanto o usuário está ativo no site;
-    resave: true, //true
+    resave: true,
     // Permite que uma sessão seja criada mesmo para solicitações que não têm dados da sessão
     saveUninitialized: false, //true
     cookie: {
@@ -33,8 +32,8 @@ app.use(
 );
 
 //View engine setup;
-app.set("view engine", "ejs");
-app.set("views", path.join(__dirname, "/views"));
+/*app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "/views"));*/
 
 app.use(express.static(path.join(__dirname, "../public"))); // precisa definir o caminho certinho para funcionar ../
 app.use(express.urlencoded({ extended: false }));

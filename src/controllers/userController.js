@@ -110,7 +110,7 @@ const userController = {
             },
           }
         );
-        console.log({TOKEN:token})
+        console.log({ TOKEN: token });
         // Response o dados do usuario mais o token;
         return res.status(200).json({
           msg: "Autenticado",

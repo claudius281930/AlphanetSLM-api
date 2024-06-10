@@ -1,4 +1,4 @@
-//modelo de destino (target model).
+// modelo de destino (target model).
 
 const { sequelize, DataTypes } = require("sequelize");
 
@@ -12,6 +12,7 @@ module.exports = (sequelize, DataTypes) => {
         autoIncrement: true,
         allowNull: false,
       },
+      // Campo da associação.
       boxId: {
         type: DataTypes.INTEGER,
         allowNull: true,
@@ -36,8 +37,8 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       tableName: "link",
-      underscored: true,
-      timestamps: false,// true
+      underscored: true, // boxId => box_id
+      timestamps: false, // true
     }
   );
   return Link;

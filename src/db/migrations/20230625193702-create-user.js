@@ -16,7 +16,7 @@ module.exports = {
       name: {
         type: Sequelize.STRING(225),
         allowNull: false,
-        unique: true,
+        allowNull: false,
       },
       /*email: {
         type: Sequelize.STRING(50),
